@@ -1,0 +1,11 @@
+# requirements.txt
+
+# Core libraries for image processing and numerical operations
+numpy
+opencv-python-headless
+
+# Visualization library
+matplotlib
+
+# Testing framework
+pytest
