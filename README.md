@@ -46,9 +46,11 @@ Your task is to implement two functions in the `solution/motion_detector.py` fil
 This function performs three-frame differencing on frames extracted from a video to create a raw motion mask.
 
 *   **Inputs:**
-    *   `frame_path` (str): The full path to the current frame (e.g., `'data/walkstraight/frame0062.tif'`).
+    *   `video_path` (str): The full path to the video file (e.g., `'data/walkstraight.mp4'`).
+    *   `t` (int): The frame index to process (e.g., `62`).
     *   `k` (int): The frame offset for differencing (e.g., `10`).
     *   `threshold` (int): The intensity threshold for binarization (e.g., `10`).
+    *   `blur_ksize` (int): The kernel size for blurring (e.g., `5`).
 *   **Implementation:**
     Use the methods described in the lecture and the example code in the notebook to implement this function. Apply blurring, differencing, and thresholding to the three frames to create the motion mask. You do **not** need to find the largest component or draw the bounding box at this point. Just return the final binary motion mask, including any possible noise artifacts.
 *   **Return:** The function must **return** the final binary motion mask as a `uint8` NumPy array (with values of 0 and 255).
