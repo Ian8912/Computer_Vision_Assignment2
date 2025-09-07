@@ -198,28 +198,69 @@ def test_clean_and_find_bbox_with_generated_mask():
 
 
 @pytest.mark.timeout(20)
-@pytest.mark.parametrize(
-    "frame_index, expected_bbox",
-    [
-        (52, (63, 219, 184, 244)),
-        (62, (59, 218, 124, 196)),
-        (83, (58, 212, 41, 137)),
-        (95, (54, 210, 19, 69)),
-    ],
-)
-def test_bboxes_for_multiple_frames(frame_index, expected_bbox):
-    """[10 Points] Bounding box accuracy across multiple specified frames."""
-    mask = generate_motion_mask(TEST_VIDEO_PATH, t=frame_index, k=10, threshold=10, blur_ksize=5)
+def test_bbox_frame_52():
+    mask = generate_motion_mask(TEST_VIDEO_PATH, t=52, k=10, threshold=10, blur_ksize=5)
     bbox, cleaned_mask_with_bbox = clean_and_find_bbox(mask)
 
     assert isinstance(cleaned_mask_with_bbox, np.ndarray)
     assert cleaned_mask_with_bbox.dtype == np.uint8
 
     s_top, s_bottom, s_left, s_right = bbox
-    e_top, e_bottom, e_left, e_right = expected_bbox
+    e_top, e_bottom, e_left, e_right = (63, 219, 184, 244)
 
     tolerance = 5
-    assert abs(s_top - e_top) <= tolerance, f"Top out of tolerance for frame {frame_index}: expected {e_top}, got {s_top}"
-    assert abs(s_bottom - e_bottom) <= tolerance, f"Bottom out of tolerance for frame {frame_index}: expected {e_bottom}, got {s_bottom}"
-    assert abs(s_left - e_left) <= tolerance, f"Left out of tolerance for frame {frame_index}: expected {e_left}, got {s_left}"
-    assert abs(s_right - e_right) <= tolerance, f"Right out of tolerance for frame {frame_index}: expected {e_right}, got {s_right}"
+    assert abs(s_top - e_top) <= tolerance, f"Top out of tolerance for frame 52: expected {e_top}, got {s_top}"
+    assert abs(s_bottom - e_bottom) <= tolerance, f"Bottom out of tolerance for frame 52: expected {e_bottom}, got {s_bottom}"
+    assert abs(s_left - e_left) <= tolerance, f"Left out of tolerance for frame 52: expected {e_left}, got {s_left}"
+    assert abs(s_right - e_right) <= tolerance, f"Right out of tolerance for frame 52: expected {e_right}, got {s_right}"
+
+@pytest.mark.timeout(20)
+def test_bbox_frame_62():
+    mask = generate_motion_mask(TEST_VIDEO_PATH, t=62, k=10, threshold=10, blur_ksize=5)
+    bbox, cleaned_mask_with_bbox = clean_and_find_bbox(mask)
+
+    assert isinstance(cleaned_mask_with_bbox, np.ndarray)
+    assert cleaned_mask_with_bbox.dtype == np.uint8
+
+    s_top, s_bottom, s_left, s_right = bbox
+    e_top, e_bottom, e_left, e_right = (59, 218, 124, 196)
+
+    tolerance = 5
+    assert abs(s_top - e_top) <= tolerance, f"Top out of tolerance for frame 62: expected {e_top}, got {s_top}"
+    assert abs(s_bottom - e_bottom) <= tolerance, f"Bottom out of tolerance for frame 62: expected {e_bottom}, got {s_bottom}"
+    assert abs(s_left - e_left) <= tolerance, f"Left out of tolerance for frame 62: expected {e_left}, got {s_left}"
+    assert abs(s_right - e_right) <= tolerance, f"Right out of tolerance for frame 62: expected {e_right}, got {s_right}"
+
+@pytest.mark.timeout(20)
+def test_bbox_frame_83():
+    mask = generate_motion_mask(TEST_VIDEO_PATH, t=83, k=10, threshold=10, blur_ksize=5)
+    bbox, cleaned_mask_with_bbox = clean_and_find_bbox(mask)
+
+    assert isinstance(cleaned_mask_with_bbox, np.ndarray)
+    assert cleaned_mask_with_bbox.dtype == np.uint8
+
+    s_top, s_bottom, s_left, s_right = bbox
+    e_top, e_bottom, e_left, e_right = (58, 212, 41, 137)
+
+    tolerance = 5
+    assert abs(s_top - e_top) <= tolerance, f"Top out of tolerance for frame 83: expected {e_top}, got {s_top}"
+    assert abs(s_bottom - e_bottom) <= tolerance, f"Bottom out of tolerance for frame 83: expected {e_bottom}, got {s_bottom}"
+    assert abs(s_left - e_left) <= tolerance, f"Left out of tolerance for frame 83: expected {e_left}, got {s_left}"
+    assert abs(s_right - e_right) <= tolerance, f"Right out of tolerance for frame 83: expected {e_right}, got {s_right}"
+
+@pytest.mark.timeout(20)
+def test_bbox_frame_95():
+    mask = generate_motion_mask(TEST_VIDEO_PATH, t=95, k=10, threshold=10, blur_ksize=5)
+    bbox, cleaned_mask_with_bbox = clean_and_find_bbox(mask)
+
+    assert isinstance(cleaned_mask_with_bbox, np.ndarray)
+    assert cleaned_mask_with_bbox.dtype == np.uint8
+
+    s_top, s_bottom, s_left, s_right = bbox
+    e_top, e_bottom, e_left, e_right = (54, 210, 19, 69)
+
+    tolerance = 5
+    assert abs(s_top - e_top) <= tolerance, f"Top out of tolerance for frame 95: expected {e_top}, got {s_top}"
+    assert abs(s_bottom - e_bottom) <= tolerance, f"Bottom out of tolerance for frame 95: expected {e_bottom}, got {s_bottom}"
+    assert abs(s_left - e_left) <= tolerance, f"Left out of tolerance for frame 95: expected {e_left}, got {s_left}"
+    assert abs(s_right - e_right) <= tolerance, f"Right out of tolerance for frame 95: expected {e_right}, got {s_right}"
