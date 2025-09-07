@@ -27,6 +27,6 @@ def advanced_motion_detector(video_path: str):
 if __name__ == '__main__':
     # You can use this section to test your advanced detector.
     # Example:
-    # video_to_process = 'data/failure_case.mp4' # Assuming you create a video from the failure case frames
+    # video_to_process = 'data/deer.mp4' # Assuming you create a video from the failure case frames
     # advanced_motion_detector(video_to_process)
     pass

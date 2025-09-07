@@ -1,3 +1,5 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/lOrmPsQD)
+[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=20353000)
 # Assignment 2: Motion Detection - Implementation and Analysis
 
 **Objective:** To implement a foundational computer vision algorithm, analyze its behavior under different parameters, understand its limitations, and optionally use AI tools to explore more advanced solutions.
@@ -21,8 +23,8 @@ You are encouraged to use generative AI (like ChatGPT, Copilot, etc.) as a tool 
     pip install -r requirements.txt
     ```
 3.  **Locate the Files:**
-    *   The primary image sequence is in `data/walkstraight/`.
-    *   The sequence for the analysis task is in `data/failure_case/`.
+    *   The primary video is `data/walkstraight.mp4` (converted from the `data/walkstraight/` frames).
+    *   The video for the failure case analysis task is in `data/deer.mp4`.
     *   You will write your **core implementation** in `solution/motion_detector.py`.
     *   You will write your **extra credit** code in `solution/advanced_detector.py`.
     *   You will create a `REPORT.md` file in the root directory for your analysis.
@@ -39,21 +41,16 @@ Your task is to implement two functions in the `solution/motion_detector.py` fil
 
 ---
 
-### Function 1: `generate_motion_mask(frame_path, k, threshold)`
+### Function 1: `generate_motion_mask(video_path, t, k, threshold, blur_ksize)`
 
-This function will perform three-frame differencing to create a raw motion mask.
+This function performs three-frame differencing on frames extracted from a video to create a raw motion mask.
 
 *   **Inputs:**
     *   `frame_path` (str): The full path to the current frame (e.g., `'data/walkstraight/frame0062.tif'`).
     *   `k` (int): The frame offset for differencing (e.g., `10`).
     *   `threshold` (int): The intensity threshold for binarization (e.g., `10`).
-*   **Implementation Steps:**
-    1.  Parse the `frame_path` to get the directory and frame number. You are provided with helper functions (`parse_frame_name`, `make_frame_name`) for this.
-    2.  Determine the file paths for frame `t-k` and frame `t+k`. Handle edge cases where `t-k` or `t+k` go out of bounds (0-124 for the `walkstraight` sequence).
-    3.  Read the three frames (`t`, `t-k`, `t+k`) in **grayscale**.
-    4.  Calculate the two absolute differences: `diff1 = abs(frame_t - frame_{t-k})` and `diff2 = abs(frame_t - frame_{t+k})`.
-    5.  Compute the per-pixel minimum of the two differences to get the final motion image.
-    6.  Apply a binary threshold to the motion image.
+*   **Implementation:**
+    Use the methods described in the lecture and the example code in the notebook to implement this function. Apply blurring, differencing, and thresholding to the three frames to create the motion mask. You do **not** need to find the largest component or draw the bounding box at this point. Just return the final binary motion mask, including any possible noise artifacts.
 *   **Return:** The function must **return** the final binary motion mask as a `uint8` NumPy array (with values of 0 and 255).
 
 ---
@@ -64,12 +61,12 @@ This function takes a noisy binary mask, cleans it, and finds the bounding box o
 
 *   **Input:**
     *   `mask` (np.ndarray): A binary motion mask (the output from the previous function).
-*   **Implementation Steps:**
-    1.  **Clean the mask:** Apply a **morphological opening** operation to the mask to remove small noise specks. Use a 3x3 rectangular kernel.
-    2.  **Find connected components:** Use `cv2.connectedComponentsWithStats` to find all distinct objects in the cleaned mask.
-    3.  **Isolate the largest component:** Identify the largest component by area (ignoring the background, which is label 0).
-    4.  **Calculate bounding box:** Determine the coordinates `(top, bottom, left, right)` for the bounding box of this largest component.
-*   **Return:** The function must **return** the bounding box as a tuple of four integers: `(top_row, bottom_row, left_column, right_column)`. If no components are found (other than the background), it should return `(0, 0, 0, 0)`.
+*   **Implementation:** Use the methods described in the lecture and the example code in the notebook (largeset connected component, morphological operations, bounding box) to implement this function.
+*   **Return:** Return: The function must return a tuple containing two items:
+    1. The bounding box as a tuple of four integers: (top_row, bottom_row, left_column, right_column).
+    2. The cleaned binary mask with the bounding box drawn on it as a uint8 NumPy array.
+
+    (e.g., `((top_row, bottom_row, left_column, right_column), cleaned_mask_with_bbox)`)
 
 ## 4. Part 2: Experimental Analysis (30 Points)
 
@@ -79,7 +76,7 @@ For this part, you will create a new file named `REPORT.md` in the root of your 
 
 ### Section 1: The "k" Parameter Experiment
 
-Use your `generate_motion_mask` function on the frame `'data/walkstraight/frame0062.tif'` with a fixed `threshold=10`. Generate the motion masks for `k = 1`, `k = 10`, and `k = 25`.
+Use your `generate_motion_mask` function on the video `data/walkstraight.mp4` at frame index `t=62` with a fixed `threshold=10`. Generate the motion masks for `k = 1`, `k = 10`, and `k = 25`.
 
 1.  **Include the three resulting mask images** in your report.
 2.  **Answer the following questions:**
@@ -91,7 +88,7 @@ Use your `generate_motion_mask` function on the frame `'data/walkstraight/frame0
 
 ### Section 2: Failure Case Analysis
 
-Run your full pipeline (both `generate_motion_mask` and `clean_and_find_bbox`) on the frame `'data/failure_case/frame0015.tif'` using the recommended parameters (`k=10`, `threshold=10`).
+Run your full pipeline (both `generate_motion_mask` and `clean_and_find_bbox`) on the frame `'data/deer.mp4'` for any frame between `240` and `320` with any parameters you want. Try to find the parameters that work best for this case.
 
 1.  **Include the final image** showing the detected bounding box on this failure case frame. You will need to write a small script to generate this. Save the output image in the `output/` folder.
 2.  **Answer the following questions:**
@@ -102,15 +99,14 @@ Run your full pipeline (both `generate_motion_mask` and `clean_and_find_bbox`) o
 
 The simple frame differencing method is not robust to real-world challenges like illumination changes or dynamic backgrounds. For extra credit, research and implement a more advanced background subtraction technique in the file `solution/advanced_detector.py`.
 
-*   **Task:** Implement the function `advanced_motion_detector(video_path)`, which takes a path to a video file and produces an output video showing the detected motion.
-*   **Recommended Technique:** A great method to investigate is the **Running Gaussian Average (MOG2)**, available in OpenCV as `cv2.createBackgroundSubtractorMOG2()`. You are highly encouraged to use an LLM for research and to help generate the initial code for this.
+*   **Task:** Implement the function `advanced_motion_detector(video_path)`, which takes a path to a video file and produces an output video showing the detected motion that does better than the simple frame differencing method. You are highly encouraged to use an LLM for research and to help generate the initial code for this.
 *   **Deliverables:**
     1.  Your implementation in `solution/advanced_detector.py`.
     2.  A new section in `REPORT.md` titled "Extra Credit: Advanced Motion Detection".
     3.  In this section, you must include:
         *   **The Prompt:** The exact prompt(s) you used with an LLM that helped you solve this.
         *   **The Result:** A side-by-side comparison (GIFs or still images) showing the output of your simple detector vs. your advanced detector on the `failure_case` data. Save your output GIF in the `output/` folder.
-        *   **Analysis:** A paragraph explaining *why* the MOG2 method is more robust than simple frame differencing for this specific failure case.
+        *   **Analysis:** A paragraph explaining *why* your method is more robust than simple frame differencing for this specific failure case.
 
 ## 6. Deliverables Summary
 
