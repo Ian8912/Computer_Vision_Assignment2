@@ -72,19 +72,27 @@ This function takes a noisy binary mask, cleans it, and finds the bounding box o
 
 ## 4. Part 2: Experimental Analysis (30 Points)
 
-For this part, you will create a new file named `REPORT.md` in the root of your repository. You will use the functions you built in Part 1 to conduct experiments and answer the following questions.
+For this part, you will create a new file named `REPORT.md` in the root of your repository. You will use the functions you built in Part 1 to conduct experiments and answer the following questions. You can create python scripts to help you generate the images for your report as needed.
 
 ---
 
-### Section 1: The "k" Parameter Experiment
+### Section 1: The Impact of Parameters on Motion Masks
 
-Use your `generate_motion_mask` function on the video `data/walkstraight.mp4` at frame index `t=62` with a fixed `threshold=10`. Generate the motion masks for `k = 1`, `k = 10`, and `k = 25`.
+In this section, you will investigate how each parameter in your `generate_motion_mask` function affects the final output. You will use frame `62` for all experiments.
 
-1.  **Include the three resulting mask images** in your report.
-2.  **Answer the following questions:**
-    *   **For k=1:** Why is the resulting mask so sparse and noisy? What does this tell you about the amount of motion between two consecutive frames in this video?
-    *   **For k=25:** You will likely see a "ghosting" or "doubled" silhouette. Explain what information from which specific frames (`t-25`, `t`, `t+25`) contributes to this visual artifact.
-    *   **Justification:** Based on these results, explain why `k=10` provides a good balance between sensitivity and clarity for this specific video.
+**Experiment A: The Frame Offset (`k`)**
+
+1.  Generate a motion mask using `k=1`, with `blur_ksize=5` and `threshold=10`.
+2.  Generate a "baseline" motion mask using `k=10`, with `blur_ksize=5` and `threshold=10`.
+3.  **In your report, show these two masks side-by-side.**
+4.  **Analysis A:** Compare the `k=1` mask to the baseline `k=10` mask. Explain why the `k=1` mask is so sparse and fragmented. What does this tell you about the speed of the person relative to the video's frame rate?
+
+**Experiment B: The Blur/Threshold Trade-off**
+
+1.  Generate a motion mask using `blur_ksize=1` (no blur) and `threshold=5`.
+2.  Generate a motion mask using `blur_ksize=7` and `threshold=5`.
+3.  **In your report, show these two masks side-by-side.**
+4.  **Analysis B:** Compare the "no blur" mask to the "blur" mask. Both use the same threshold, but the second one is much cleaner. Explain how applying a Gaussian blur to the input frames reduces the amount of noise in the final motion mask.
 
 ---
 
